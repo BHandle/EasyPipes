@@ -80,6 +80,8 @@ namespace EasyPipes
         /// </summary>
         public List<Type> KnownTypes { get; private set; }
 
+        public Action WhenDisconnected { get; set; }
+        
         protected Timer timer;
 
         /// <summary>
@@ -224,6 +226,7 @@ namespace EasyPipes
                 Stream.Dispose();
 
             Stream = null;
+            WhenDisconnected?.Invoke();
         }
     }
 }

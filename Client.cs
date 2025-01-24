@@ -157,7 +157,15 @@ namespace EasyPipes
             timer = new Timer(
                 (object state) =>
                 {
-                    SendMessage(new IpcMessage { StatusMsg = StatusMessage.Ping });
+                    try
+                    {
+                        SendMessage(new IpcMessage { StatusMsg = StatusMessage.Ping });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        this.Disconnect(false);
+                    }
                 },
                 null,
                 Server.ReadTimeOut / 2,

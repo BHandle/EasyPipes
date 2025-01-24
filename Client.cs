@@ -80,6 +80,8 @@ namespace EasyPipes
         /// </summary>
         public List<Type> KnownTypes { get; private set; }
 
+        public Action WhenDisconnected { get; set; }
+        
         protected Timer timer;
 
         /// <summary>
@@ -155,7 +157,15 @@ namespace EasyPipes
             timer = new Timer(
                 (object state) =>
                 {
-                    SendMessage(new IpcMessage { StatusMsg = StatusMessage.Ping });
+                    try
+                    {
+                        SendMessage(new IpcMessage { StatusMsg = StatusMessage.Ping });
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        this.Disconnect(false);
+                    }
                 },
                 null,
                 Server.ReadTimeOut / 2,
@@ -210,20 +220,21 @@ namespace EasyPipes
         /// to the server (if you called Connect(), this should be true)</param>
         public virtual void Disconnect(bool sendCloseMessage = true)
         {
+            // stop keepalive ping
+            timer?.Dispose();
+            
             // send close notification
             if (sendCloseMessage)
             {
-                // stop keepalive ping
-                timer?.Dispose();
-
                 IpcMessage msg = new IpcMessage() { StatusMsg = StatusMessage.CloseConnection };
-                Stream.WriteMessage(msg);
+                Stream?.WriteMessage(msg);
             }
 
             if (Stream != null)
                 Stream.Dispose();
 
             Stream = null;
+            WhenDisconnected?.Invoke();
         }
     }
 }

@@ -210,6 +210,9 @@ namespace EasyPipes
         /// to the server (if you called Connect(), this should be true)</param>
         public virtual void Disconnect(bool sendCloseMessage = true)
         {
+            // stop keepalive ping
+            timer?.Dispose();
+            
             // send close notification
             if (sendCloseMessage)
             {

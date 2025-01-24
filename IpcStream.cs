@@ -126,8 +126,8 @@ namespace EasyPipes
                 if (length > UInt16.MaxValue)
                     throw new InvalidOperationException("Message is too long");
 
-            // write message length
-            BaseStream.Write(new byte[] { (byte)(length / 256), (byte)(length & 255) }, 0, 2);
+                // write message length
+                BaseStream.Write(new byte[] {(byte) (length / 256), (byte) (length % 256)}, 0, 2);
 
                 // write message
                 BaseStream.Write(buffer, 0, length);

@@ -181,18 +181,21 @@ namespace EasyPipes
         protected object SendMessage(IpcMessage message)
         {
             // if not connected, this is a single-message connection
-            bool closeStream = false;
+            bool closeStreamAfterSend = false;
             var stream = Stream;
             if (stream == null)
             {
                 if (!Connect(false))
                     throw new TimeoutException("Unable to connect");
-                closeStream = true;
+                stream = Stream;
+                if (stream == null)
+                    throw new TimeoutException("Unable to connect");
+
+                closeStreamAfterSend = true;
             } else if( message.StatusMsg == StatusMessage.None )
             { // otherwise tell server to keep connection alive
                 message.StatusMsg = StatusMessage.KeepAlive;
             }
-            
 
             IpcMessage rv;
             lock (stream)
@@ -206,9 +209,9 @@ namespace EasyPipes
                 rv = stream.ReadMessage();
             }
             
-            if (closeStream)
+            if (closeStreamAfterSend)
                 Disconnect(false);
-
+            
             if (rv.Error != null)
                 throw new InvalidOperationException(rv.Error);
 

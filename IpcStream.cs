@@ -94,7 +94,7 @@ namespace EasyPipes
                 throw new InvalidOperationException("IpcStream.BaseStream needs to be seekable or derived from a known type.");
 
             // wait until data is available
-            await Extensions.WaitUntil(availableFunc, 25, Server.ReadTimeOut).ConfigureAwait(false);
+            await Extensions.WaitUntil(availableFunc, 25, IPCPipeServer.ReadTimeOut).ConfigureAwait(false);
 
             // read message length
             byte[] buffer = new byte[2];

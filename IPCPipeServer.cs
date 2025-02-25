@@ -14,7 +14,7 @@ namespace EasyPipes
     /// <summary>
     /// <see cref="NamedPipeClientStream"/> based IPC server
     /// </summary>
-    public class Server
+    public class IPCPipeServer
     {
         /// <summary>
         /// Name of the pipe
@@ -42,7 +42,7 @@ namespace EasyPipes
         /// </summary>
         /// <param name="pipe">Name of the pipe to use</param>
         /// <param name="pipeOpening">Optional delegate to open PipeStream (for example through NamedPipeServerStreamAcl)</param>
-        public Server(string pipe, Func<string, int, NamedPipeServerStream> pipeOpening = null)
+        public IPCPipeServer(string pipe, Func<string, int, NamedPipeServerStream> pipeOpening = null)
         {
             PipeName = pipe;
             CancellationToken = new CancellationTokenSource();

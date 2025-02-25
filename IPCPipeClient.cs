@@ -13,7 +13,7 @@ namespace EasyPipes
     /// <summary>
     /// <see cref="NamedPipeClientStream"/> based IPC client
     /// </summary>
-    public class Client
+    public class IPCPipeClient
     {
 
         /// <summary>
@@ -26,15 +26,15 @@ namespace EasyPipes
             /// <summary>
             /// The ipc client associated with this proxy
             /// </summary>
-            public Client Client { get; private set; }
+            public IPCPipeClient IpcPipeClient { get; private set; }
 
             /// <summary>
             /// Constructor
             /// </summary>
             /// <param name="c">The ipc client associated with this proxy</param>
-            public Proxy(Client c)
+            public Proxy(IPCPipeClient c)
             {
-                Client = c;
+                IpcPipeClient = c;
             }
 
             /// <summary>
@@ -62,7 +62,7 @@ namespace EasyPipes
                 msg.Parameters = arguments;
                 
                 // send message
-                return Client.SendMessage(msg);
+                return IpcPipeClient.SendMessage(msg);
             }
         }
 
@@ -88,7 +88,7 @@ namespace EasyPipes
         /// Constructor
         /// </summary>
         /// <param name="pipeName">Name of the pipe</param>
-        public Client(string pipeName)
+        public IPCPipeClient(string pipeName)
         {
             PipeName = pipeName;
             KnownTypes = new List<Type>();
@@ -168,8 +168,8 @@ namespace EasyPipes
                     }
                 },
                 null,
-                Server.ReadTimeOut / 2,
-                Server.ReadTimeOut / 2);
+                IPCPipeServer.ReadTimeOut / 2,
+                IPCPipeServer.ReadTimeOut / 2);
         }
 
         /// <summary>
@@ -182,7 +182,8 @@ namespace EasyPipes
         {
             // if not connected, this is a single-message connection
             bool closeStream = false;
-            if (Stream == null)
+            var stream = Stream;
+            if (stream == null)
             {
                 if (!Connect(false))
                     throw new TimeoutException("Unable to connect");
@@ -191,17 +192,18 @@ namespace EasyPipes
             { // otherwise tell server to keep connection alive
                 message.StatusMsg = StatusMessage.KeepAlive;
             }
+            
 
             IpcMessage rv;
-            lock (Stream)
+            lock (stream)
             {
-                Stream.WriteMessage(message);
+                stream.WriteMessage(message);
 
                 // don't wait for answer on keepalive-ping
                 if (message.StatusMsg == StatusMessage.Ping)
                     return null;
 
-                rv = Stream.ReadMessage();
+                rv = stream.ReadMessage();
             }
             
             if (closeStream)

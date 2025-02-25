@@ -14,7 +14,7 @@ namespace EasyPipes
     static class Extensions
     {
         /// <summary>
-        /// Async awaiter for <see cref="TcpClient"/> connection, with cancellation support
+        /// Async awaiter for <see cref="TcpIpcPipeClient"/> connection, with cancellation support
         /// </summary>
         /// <param name="listener"></param>
         /// <param name="ct">Cancellation token to respond to</param>

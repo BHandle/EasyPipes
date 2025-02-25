@@ -14,7 +14,7 @@ namespace EasyPipes
     /// <summary>
     /// A <see cref="System.Net.Sockets.TcpClient"/> based IPC client
     /// </summary>
-    public class TcpClient : Client
+    public class TcpIpcPipeClient : IPCPipeClient
     {
         /// <summary>
         /// Ip and port to connect to
@@ -37,7 +37,7 @@ namespace EasyPipes
         /// <param name="address">Address and port to connect to</param>
         /// <param name="encryptor">Optional encryption algorithm for the messages, will be enabled
         /// after call to an <see cref="EncryptIfTrueAttribute"/> labeled method</param>      
-        public TcpClient(IPEndPoint address, Encryptor encryptor = null) : base(null)
+        public TcpIpcPipeClient(IPEndPoint address, Encryptor encryptor = null) : base(null)
         {
             EndPoint = address;
             Encryptor = encryptor;

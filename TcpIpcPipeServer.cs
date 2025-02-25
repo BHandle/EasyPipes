@@ -16,7 +16,7 @@ namespace EasyPipes
     /// <summary>
     /// A <see cref="TcpListener"/> based IPC server
     /// </summary>
-    public class TcpServer : Server
+    public class TcpIpcPipeServer : IPCPipeServer
     {
         /// <summary>
         /// IP and address bound by the server
@@ -39,7 +39,7 @@ namespace EasyPipes
         /// <param name="address">Address and port to bind for the server</param>
         /// <param name="encryptor">Optional encryption algorithm for the messages, will be enabled
         /// after call to an <see cref="EncryptIfTrueAttribute"/> labeled method</param>  
-        public TcpServer(IPEndPoint address, Encryptor encryptor = null) : base(null)
+        public TcpIpcPipeServer(IPEndPoint address, Encryptor encryptor = null) : base(null)
         {
             EndPoint = address;
             Encryptor = encryptor;
@@ -85,7 +85,7 @@ namespace EasyPipes
 
                     using (NetworkStream networkStream = client.GetStream())
                     {
-                        networkStream.ReadTimeout = Server.ReadTimeOut;
+                        networkStream.ReadTimeout = IPCPipeServer.ReadTimeOut;
                         Stream serverStream = networkStream;
 
                         Guid id = Guid.NewGuid();

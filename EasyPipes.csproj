@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0-windows</TargetFramework>
     <Authors>SeaEagle1</Authors>
     <Company>OS</Company>
     <Description>Lightweight IPC library based on NamedPipes or TCP. Provides easy-to-use proxy interface for remote calls. Built on .NET Standard 2.0 for compatability with most modern .NET versions.</Description>
